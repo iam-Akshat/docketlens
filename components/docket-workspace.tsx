@@ -303,6 +303,12 @@ export function DocketWorkspace() {
     const payload = await getJson<{ comment: CommentDetail }>(
       `/api/regulations?mode=comment&id=${encodeURIComponent(id)}`,
     );
+    const activeDocketId = docketRef.current?.id;
+    if (activeDocketId && payload.comment.docketId !== activeDocketId) {
+      throw new Error(
+        `Comment ${id} does not belong to the loaded docket ${activeDocketId}.`,
+      );
+    }
     detailsRef.current = { ...detailsRef.current, [id]: payload.comment };
     setDetails(detailsRef.current);
     return payload.comment;
