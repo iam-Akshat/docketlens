@@ -4,7 +4,7 @@ Do not submit until every **P0** item is complete.
 
 ## P0 — submission blockers
 
-- [ ] Approve public access for the Sites deployment.
+- [x] Approve public access for the Sites deployment.
 - [ ] Verify the public app and live Regulations.gov API work in an anonymous browser.
 - [ ] Record a clear 2–3 minute walkthrough inside a real WebMCP-capable browser.
 - [ ] Show the `8 site tools ready` badge and an agent performing search, pagination, inspection, comparison, evidence pinning, and brief preparation.
