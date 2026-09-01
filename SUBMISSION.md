@@ -3,8 +3,8 @@
 ## Submission links
 
 - Live product: [docketlens.masterakshata.chatgpt.site](https://docketlens.masterakshata.chatgpt.site)
-- Public source: [github.com/iam-Akshat/docketlens](https://github.com/iam-Akshat/docketlens)
-- Demo video: upload the verified narrated MP4 to public YouTube before submitting the form.
+- Source repository: [github.com/iam-Akshat/docketlens](https://github.com/iam-Akshat/docketlens) — change visibility from private to public before submission.
+- Demo video: upload `.demo-artifacts/output/docketlens-submission-demo.mp4` to public YouTube, then replace this line with the final URL.
 
 ## One-line pitch
 
@@ -40,6 +40,7 @@ Normal browsing agents manipulate page controls heuristically and may lose conte
 - `untrustedContentHint` on operations that return public user-submitted text.
 - Server-side Regulations.gov API v4 proxy with identifier validation, response minimization, caching, official-host attachment allow-listing, and secret-safe API-key handling.
 - Human-review state for agent-created evidence and human-controlled Markdown export.
+- Visible WebMCP registration diagnostics, exact-quote and cross-docket guards, and focused automated safety tests.
 
 ## Why it can win
 
@@ -53,4 +54,4 @@ Normal browsing agents manipulate page controls heuristically and may lose conte
 
 ## Important limitation
 
-DocketLens supports research, not legal advice, and never files a public comment. Automated findings require human verification.
+DocketLens supports research, not legal advice, and never files a public comment. Automated findings require human verification, and pending evidence cannot be exported. The current product validates inline Regulations.gov comment text; it links official attachments but does not extract their contents.

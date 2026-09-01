@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  AlertTriangle,
   ArrowDownToLine,
   ArrowUpRight,
   Bot,
@@ -34,6 +35,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  commentBelongsToDocket,
+  isGroundedQuote,
+  MAX_RESULT_PAGE,
+  normalizeEvidenceText,
+  validatedResultPage,
+} from '@/lib/docket-guards';
 
 const DEFAULT_DOCKET = 'COLC-2023-0006';
 const DEFAULT_QUERY = 'OpenAI';
@@ -173,13 +181,9 @@ function formatDate(value: string | null) {
       }).format(date);
 }
 
-function normalizeText(value: string) {
-  return value.replace(/\s+/g, ' ').trim().toLocaleLowerCase();
-}
-
 function sourceText(detail: CommentDetail | null, summary?: CommentSummary) {
   const body = detail?.body?.trim() || '';
-  if (body && normalizeText(body) !== 'see attached') return body;
+  if (body && normalizeEvidenceText(body) !== 'see attached') return body;
   return (
     summary?.snippet || body || 'This submission is available as an attachment.'
   );
@@ -265,8 +269,9 @@ export function DocketWorkspace() {
   const [agentPulse, setAgentPulse] = useState('');
   const [shareCopied, setShareCopied] = useState(false);
   const [webMcpStatus, setWebMcpStatus] = useState<
-    'checking' | 'ready' | 'unsupported'
+    'checking' | 'ready' | 'unsupported' | 'failed'
   >('unsupported');
+  const [webMcpDiagnostic, setWebMcpDiagnostic] = useState('');
 
   const commentsRef = useRef<CommentSummary[]>([]);
   const detailsRef = useRef<Record<string, CommentDetail>>({});
@@ -343,7 +348,10 @@ export function DocketWorkspace() {
       `/api/regulations?mode=comment&id=${encodeURIComponent(id)}`,
     );
     const activeDocketId = docketRef.current?.id;
-    if (activeDocketId && payload.comment.docketId !== activeDocketId) {
+    if (
+      activeDocketId &&
+      !commentBelongsToDocket(payload.comment.docketId, activeDocketId)
+    ) {
       throw new Error(
         `Comment ${id} does not belong to the loaded docket ${activeDocketId}.`,
       );
@@ -396,8 +404,7 @@ export function DocketWorkspace() {
       page = 1,
     ) => {
       const cleanTerm = term.trim().slice(0, 180);
-      const normalizedPage = Number.isFinite(page) ? Math.trunc(page) : 1;
-      const requestedPage = Math.min(10_000, Math.max(1, normalizedPage));
+      const requestedPage = validatedResultPage(page);
       setLoadingComments(true);
       setError('');
       try {
@@ -559,10 +566,7 @@ export function DocketWorkspace() {
       const summary = commentsRef.current.find((item) => item.id === commentId);
       const detail = await getCommentDetail(commentId);
       const quote = exactQuote.replace(/\s+/g, ' ').trim().slice(0, 1200);
-      const haystack = normalizeText(
-        `${detail.body} ${summary?.snippet || ''}`,
-      );
-      if (quote.length < 12 || !haystack.includes(normalizeText(quote))) {
+      if (!isGroundedQuote(`${detail.body} ${summary?.snippet || ''}`, quote)) {
         throw new Error(
           'The excerpt must exactly match text returned by Regulations.gov for this comment.',
         );
@@ -693,9 +697,7 @@ export function DocketWorkspace() {
     initialLoadStartedRef.current = true;
 
     const params = new URLSearchParams(window.location.search);
-    const requestedDocket = (params.get('docket') || '')
-      .trim()
-      .toUpperCase();
+    const requestedDocket = (params.get('docket') || '').trim().toUpperCase();
     const initialDocket = /^[A-Z0-9][A-Z0-9-]{2,80}$/.test(requestedDocket)
       ? requestedDocket
       : DEFAULT_DOCKET;
@@ -706,9 +708,7 @@ export function DocketWorkspace() {
       1,
       Number.parseInt(params.get('page') || '1', 10) || 1,
     );
-    const requestedComment = (params.get('comment') || '')
-      .trim()
-      .toUpperCase();
+    const requestedComment = (params.get('comment') || '').trim().toUpperCase();
 
     const timer = window.setTimeout(() => {
       void (async () => {
@@ -791,7 +791,7 @@ export function DocketWorkspace() {
               description:
                 'One-based result page. Use later pages to investigate beyond the first 20 matches.',
               minimum: 1,
-              maximum: 10000,
+              maximum: MAX_RESULT_PAGE,
               default: 1,
             },
           },
@@ -961,9 +961,18 @@ export function DocketWorkspace() {
           await context.registerTool(tool, { signal: controller.signal });
         }
         setWebMcpStatus('ready');
+        setWebMcpDiagnostic('');
         addActivity('system', `${tools.length} WebMCP tools registered`);
-      } catch {
-        setWebMcpStatus('unsupported');
+      } catch (cause) {
+        const message =
+          cause instanceof Error && cause.message
+            ? cause.message
+            : 'The browser rejected one or more site tools.';
+        setWebMcpStatus('failed');
+        setWebMcpDiagnostic(
+          `WebMCP tool registration failed: ${message.slice(0, 180)}`,
+        );
+        addActivity('system', 'WebMCP tool registration failed');
       }
     })();
 
@@ -975,8 +984,14 @@ export function DocketWorkspace() {
   const selectedText = sourceText(selectedDetail, selectedSummary);
   const selectedPinText =
     selectedDetail?.body?.trim() || selectedSummary?.snippet?.trim() || '';
+  const selectedIsAttachmentOnly = Boolean(
+    selectedDetail?.attachments.length &&
+    (!selectedDetail.body.trim() ||
+      normalizeEvidenceText(selectedDetail.body) === 'see attached'),
+  );
   const selectedTags = selectedId ? tags[selectedId] || [] : [];
   const verifiedCount = pins.filter((pin) => pin.verified).length;
+  const pendingPinCount = pins.length - verifiedCount;
   const primaryDocument =
     documents.find((item) => item.federalRegisterUrl) || documents[0];
 
@@ -1120,7 +1135,9 @@ export function DocketWorkspace() {
               className={
                 webMcpStatus === 'ready'
                   ? 'border-violet-200 bg-violet-50 text-violet-700'
-                  : 'border-stone-200 bg-stone-50 text-stone-600'
+                  : webMcpStatus === 'failed'
+                    ? 'border-red-200 bg-red-50 text-red-700'
+                    : 'border-stone-200 bg-stone-50 text-stone-600'
               }
             >
               <Bot className="size-3" />
@@ -1128,11 +1145,25 @@ export function DocketWorkspace() {
                 ? '8 site tools ready'
                 : webMcpStatus === 'checking'
                   ? 'Checking site tools'
-                  : 'Open in a WebMCP browser'}
+                  : webMcpStatus === 'failed'
+                    ? 'Site tools need attention'
+                    : 'Open in a WebMCP browser'}
             </Badge>
           </div>
         </div>
       </header>
+
+      {webMcpDiagnostic ? (
+        <div
+          role="alert"
+          className="border-b border-red-200 bg-red-50 px-4 py-2 text-center text-xs text-red-800 sm:px-6"
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <AlertTriangle className="size-3.5" /> {webMcpDiagnostic} Reload the
+            page or reopen it in a WebMCP-capable browser.
+          </span>
+        </div>
+      ) : null}
 
       <section
         className={`border-b border-border bg-card px-4 py-3 transition-shadow sm:px-6 ${agentPulse === 'docket' ? 'agent-pulse' : ''}`}
@@ -1276,9 +1307,7 @@ export function DocketWorkspace() {
                   key={preset}
                   variant={query === preset ? 'secondary' : 'outline'}
                   size="xs"
-                  onClick={() =>
-                    void searchComments(docketId, preset, 'human')
-                  }
+                  onClick={() => void searchComments(docketId, preset, 'human')}
                 >
                   {preset}
                 </Button>
@@ -1353,12 +1382,7 @@ export function DocketWorkspace() {
                 aria-label="Previous result page"
                 disabled={loadingComments || resultPage <= 1}
                 onClick={() =>
-                  void searchComments(
-                    docketId,
-                    query,
-                    'human',
-                    resultPage - 1,
-                  )
+                  void searchComments(docketId, query, 'human', resultPage - 1)
                 }
               >
                 <ChevronLeft />
@@ -1372,12 +1396,7 @@ export function DocketWorkspace() {
                 aria-label="Next result page"
                 disabled={loadingComments || !hasNextPage}
                 onClick={() =>
-                  void searchComments(
-                    docketId,
-                    query,
-                    'human',
-                    resultPage + 1,
-                  )
+                  void searchComments(docketId, query, 'human', resultPage + 1)
                 }
               >
                 <ChevronRight />
@@ -1578,6 +1597,18 @@ export function DocketWorkspace() {
                         {selectedText}
                       </p>
                     </div>
+                    {selectedIsAttachmentOnly ? (
+                      <div className="mt-3 rounded-lg border border-amber-300/40 bg-amber-300/10 p-3 text-xs leading-relaxed text-amber-100">
+                        <p className="flex items-center gap-1.5 font-semibold">
+                          <AlertTriangle className="size-3.5" /> Attachment text
+                          is not extracted
+                        </p>
+                        <p className="mt-1 text-amber-100/80">
+                          Open the official attachment to review it. DocketLens
+                          only pins text published inline by Regulations.gov.
+                        </p>
+                      </div>
+                    ) : null}
                     <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
                       Select exact text above, then pin it. If no selection is
                       made, DocketLens pins the opening excerpt.
@@ -1730,6 +1761,17 @@ export function DocketWorkspace() {
                       }}
                       className="mt-2 border-slate-600 bg-slate-950/50 text-slate-100"
                     />
+                    {pendingPinCount ? (
+                      <div
+                        role="alert"
+                        className="mt-3 flex items-start gap-2 rounded-lg border border-amber-300/40 bg-amber-300/10 p-2.5 text-xs text-amber-100"
+                      >
+                        <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
+                        Verify {pendingPinCount} agent-created evidence pin
+                        {pendingPinCount === 1 ? '' : 's'} before copying or
+                        downloading this brief.
+                      </div>
+                    ) : null}
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Button
                         size="sm"
@@ -1742,6 +1784,12 @@ export function DocketWorkspace() {
                         size="sm"
                         variant="outline"
                         onClick={() => void copyBrief()}
+                        disabled={pendingPinCount > 0}
+                        title={
+                          pendingPinCount
+                            ? 'Verify all pending evidence before export'
+                            : 'Copy verified brief'
+                        }
                         className="border-slate-600 bg-transparent text-slate-200 hover:bg-slate-800 hover:text-white"
                       >
                         <Clipboard /> Copy
@@ -1750,6 +1798,12 @@ export function DocketWorkspace() {
                         size="sm"
                         variant="outline"
                         onClick={downloadBrief}
+                        disabled={pendingPinCount > 0}
+                        title={
+                          pendingPinCount
+                            ? 'Verify all pending evidence before export'
+                            : 'Download verified brief'
+                        }
                         className="border-slate-600 bg-transparent text-slate-200 hover:bg-slate-800 hover:text-white"
                       >
                         <ArrowDownToLine /> Download

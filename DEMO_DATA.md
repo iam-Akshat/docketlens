@@ -7,47 +7,45 @@ This is a recording runbook, not seeded app data. Every record must still resolv
 | Purpose | Value |
 | --- | --- |
 | Live app | `https://docketlens.masterakshata.chatgpt.site/` |
-| Docket | `COLC-2023-0006` — Artificial Intelligence and Copyright |
-| First search | `fair use` |
-| First comment | `COLC-2023-0006-10085` — Comment from La raza community outreach |
-| Second search | `OpenAI` |
-| Second comment | `COLC-2023-0006-10199` — Comment from Bessette, Thomas |
-| First official source | `https://www.regulations.gov/comment/COLC-2023-0006-10085` |
-| Second official source | `https://www.regulations.gov/comment/COLC-2023-0006-10199` |
+| Docket | `FTC-2023-0033` — FTC Seek Comments on the Negative Option Rule |
+| Search | `cancel` — 1,066 live matches at preflight |
+| First comment | `FTC-2023-0033-1056` — Comment from DAngelo, James |
+| Second comment | `FTC-2023-0033-1136` — Comment from Ellis, Amy |
+| First official source | `https://www.regulations.gov/comment/FTC-2023-0033-1056` |
+| Second official source | `https://www.regulations.gov/comment/FTC-2023-0033-1136` |
 
-These two records completed the existing real-data rehearsal. They are individual public comments used to demonstrate contrasting evidence, not official statements by OpenAI or the Authors Guild.
+Both records returned substantive inline text and no attachments in the final local preflight. They demonstrate contrasting public views: easier online cancellation and a small-business request to exclude service contracts.
 
-## Copy-ready agent prompts
+## Copy-ready agent prompt
 
-### 1. Research, compare, and stage evidence
+> Use DocketLens’s site tools on docket `FTC-2023-0033`. Search “cancel” on page 1, then page 2. Inspect comments `FTC-2023-0033-1056` and `FTC-2023-0033-1136`, compare them, and pin one exact sentence from each with a neutral note. Prepare a preview titled “FTC click-to-cancel evidence brief.” Stop before verification or download.
 
-> Use DocketLens’s site tools on the currently loaded docket. Search “fair use” and inspect comment `COLC-2023-0006-10085`. Then search “OpenAI” and inspect comment `COLC-2023-0006-10199`. Compare those two public comments. Pin one exact, complete sentence from each source that represents the commenter’s position; do not paraphrase, infer intent, or treat either commenter as speaking for OpenAI or the Authors Guild. Add concise neutral analyst notes. Stop before human verification or download.
+## Exact checked excerpts
 
-### 2. Prepare the result after manual verification
-
-> Prepare the cited brief preview titled “AI copyright evidence brief” from the current verified evidence. Do not download anything.
+- `FTC-2023-0033-1056`: “If you signed up online, you should be able to cancel online.”
+- `FTC-2023-0033-1136`: “Service contracts are not the same as gym memberships, and don't have the same issues that the FTC indicated as the reason to create the rule.”
 
 ## Expected visible result
 
 - The site reports `8 site tools ready`.
-- The Compare view contains both exact comment IDs and official source links.
-- Each agent-created pin is labeled **Pending human review**.
-- The operator, not the agent, clicks **Verify**.
-- The final brief contains only exact fetched excerpts, review status, and source URLs.
-- Activity records which actions came from the agent and which came from the human.
+- Pagination visibly changes from page 1 to page 2.
+- Compare contains both comment IDs and official source links.
+- Both agent-created pins are **Pending human review**.
+- Copy and Download are disabled until the operator clicks **Verify** twice.
+- Activity distinguishes agent, human, and system actions.
 - No tool submits, edits, or deletes a government comment.
 
 ## Five-minute preflight
 
 1. Open the live app in a WebMCP-capable browser and hard refresh.
-2. Confirm the docket title, live-source badge, comment count, and eight-tool badge.
-3. Search each saved term and inspect each saved comment ID.
-4. Confirm both records expose enough inline body text for a complete-sentence quote.
-5. Open both official links in separate tabs and confirm they resolve.
-6. Clear local state or reload the docket, close extra tabs, zoom to 90–100%, and start capture.
+2. Confirm the FTC title, 1,163 live comments, source badge, and eight-tool badge.
+3. Search `cancel`, paginate to page 2, and inspect both fixed IDs.
+4. Confirm both exact excerpts still exist in inline body text.
+5. Open both official links and confirm they resolve.
+6. Reload the share URL, close extra tabs, and start capture.
 
 ## Honest fallback if live data changes
 
-Do not use screenshots, cached JSON, or invented records. Search the same live docket for `fair use` and `OpenAI`, choose two visible comments with substantive inline text, open their official links, and replace the two IDs in the prompt before recording. Describe them as “two public commenters,” not named organizations, unless the source metadata proves the organization.
+Never use screenshots, cached JSON, or invented records. Search this live docket for `cancel`, choose two visible comments with substantive inline text, open their official links, and replace the IDs and excerpts before recording.
 
 Do not expose the Regulations.gov API key in the page, prompt, terminal, repository, or video.

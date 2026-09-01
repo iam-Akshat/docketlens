@@ -78,6 +78,7 @@ Open the local URL in Chrome with WebMCP testing enabled, or deploy it and use C
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
@@ -96,6 +97,12 @@ Then verify:
 - Human-controlled: agent evidence is clearly labeled and export is a human action.
 - Secret-safe: the data.gov key stays in server runtime configuration.
 - Public-record minimization: contact fields such as email, phone number, and address are never returned by the proxy.
+
+## Current scope
+
+DocketLens can validate and pin comment text published inline by Regulations.gov. It shows official attachment links but does not extract or search attachment contents; attachment-only records are clearly labeled in the source inspector. Regulations.gov limits a single paginated query window to 5,000 results, so DocketLens caps the 20-record result view and WebMCP tool at page 250 with a specific error beyond that boundary.
+
+Agent-created evidence can be previewed while pending, but copying and downloading remain disabled until every pin has been human-verified.
 
 ## License
 

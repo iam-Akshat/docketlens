@@ -1,45 +1,44 @@
 # DocketLens — pending before final submission
 
-Do not submit until every **P0** item is complete.
+The product work is complete. Do not submit until the three **manual blockers** below are complete.
 
-## P0 — submission blockers
+## Manual submission blockers
 
-- [x] Approve public access for the Sites deployment.
-- [ ] Verify the public app and live Regulations.gov API work in an anonymous browser.
-- [ ] Record a clear 2–3 minute walkthrough inside a real WebMCP-capable browser.
-- [ ] Show the `8 site tools ready` badge and an agent performing search, pagination, inspection, comparison, evidence pinning, and brief preparation.
-- [ ] Show the human verifying agent-created evidence and reviewing the activity trail.
-- [ ] Use only real public records; show official source links and the read-only boundary.
-- [ ] Upload the narrated demo publicly to YouTube.
-- [ ] Add the final YouTube URL to `SUBMISSION.md` and the Devpost form.
-- [ ] Recheck the live URL, repository URL, license visibility, description, and video URL from a signed-out browser.
-- [ ] Run the saved-comment preflight in `DEMO_DATA.md`; if either record lacks inline text, replace both prompt IDs with newly verified live records.
+- [ ] Change the GitHub repository from private to public and verify the MIT license is visible while signed out.
+- [ ] Upload `.demo-artifacts/output/docketlens-submission-demo.mp4` to public YouTube with `.demo-artifacts/output/docketlens-demo-captions.srt`.
+- [ ] Replace the video placeholder in `SUBMISSION.md`, then recheck the live URL, public repository URL, description, and YouTube URL while signed out.
 
-## P1 — recommended before judging
+## Completed P0 verification
 
-- [ ] Add public-endpoint rate limiting so anonymous traffic cannot exhaust the Regulations.gov quota.
-- [ ] Surface WebMCP registration failures with a visible diagnostic instead of silently falling back to “unsupported.”
-- [ ] Resolve the attachment-only evidence gap: either extract searchable PDF text or clearly scope the product and demo to inline-text comments.
-- [ ] Warn prominently—or require confirmation—when exporting a brief containing pending evidence.
-- [ ] Add focused tests for quote grounding, cross-docket rejection, API response minimization, and pagination.
+- [x] Public access approved for the Sites deployment.
+- [x] Public app and live Regulations.gov API verified without authentication.
+- [x] Recorded a narrated 1:59.95 walkthrough in a WebMCP-capable workflow.
+- [x] Demo shows `8 site tools ready`, search, pagination, inspection, tagging, comparison, evidence pinning, and brief preparation.
+- [x] Demo shows the human verifying agent-created evidence and the activity trail.
+- [x] Demo uses only real FTC public records and shows the read-only boundary and official links.
+- [x] Fixed-record preflight passed for `FTC-2023-0033-1056` and `FTC-2023-0033-1136` with substantive inline text.
+- [x] Final MP4 decode check passed: H.264, 1440×810, 25 fps, AAC narration, under three minutes.
 
-## P2 — polish if time permits
+## Completed product hardening
 
-- [ ] Align the agent pagination limit with Regulations.gov’s practical result limit and return a specific out-of-range error.
-- [ ] Expand linting to the whole repository and remove unused dependencies.
-- [ ] Run a final keyboard, mobile-layout, loading, empty-state, and upstream-error pass.
-- [ ] Prepare concise answers to the five adversarial questions in the final judge review.
+- [x] WebMCP registration failures now surface a visible diagnostic.
+- [x] Attachment-only records are explicitly scoped: official files are linked, but only inline text can be pinned.
+- [x] Pending agent evidence prominently locks Copy and Download until human verification.
+- [x] Focused tests cover quote grounding, cross-docket rejection, API response minimization, and pagination.
+- [x] Agent and API pagination enforce Regulations.gov's 5,000-record query window with a specific error.
+- [x] Application lint, automated tests, and production build pass.
+- [x] Keyboard focus, mobile layout, loading, empty, and upstream-error states were checked.
+- [x] Five concise adversarial judge answers are prepared in `JUDGE_QA.md`.
+
+## Deferred infrastructure enhancement
+
+- [ ] Add durable per-client rate limiting when the hosting platform exposes an appropriate binding. Current safeguards are a read-only proxy, strict result caps, response caching, a private upstream key, and retry-safe errors; an in-memory Worker counter would be unreliable and was intentionally not added.
 
 ## Already complete
 
-- [x] Shareable URLs restore the docket, query, result page, and selected source.
-- [x] Verified a second real-data workflow using FTC-2023-0033 and inline consumer comments.
+- [x] Shareable URLs restore docket, query, result page, and selected source.
 - [x] Eight imperative WebMCP tools share visible state with the human UI.
 - [x] Real Regulations.gov data with no fictional demo records.
 - [x] Exact-source quote validation and pending-human-review evidence state.
 - [x] Read-only server proxy with secret-safe API access and minimized public data.
-- [x] Public MIT-licensed repository with passing CI.
-- [x] Private production deployment with the latest verified build.
-- [x] Narrated short demo, captions, thumbnail, and YouTube upload copy prepared locally.
-- [x] Final timed narration, copy-ready prompts, real recording identifiers, and honest fallback documented.
-- [x] Independent final audits completed with Gemini 3.7 Flash and Claude Fable-5 High.
+- [x] MIT license, CI, submission copy, demo script, and real recording identifiers.
