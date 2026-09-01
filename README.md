@@ -27,7 +27,7 @@ Without WebMCP, an agent must visually guess where search boxes, result cards, t
 | WebMCP tool | Product action |
 | --- | --- |
 | `load_regulatory_docket` | Load a real Regulations.gov docket and its notices |
-| `search_public_comments` | Search only within the loaded docket |
+| `search_public_comments` | Search and paginate within the loaded docket |
 | `inspect_public_comment` | Open one official submission with attachments and metadata |
 | `tag_visible_comments` | Organize visible records by research theme |
 | `pin_source_excerpt` | Add a verbatim, source-validated passage to the evidence board |

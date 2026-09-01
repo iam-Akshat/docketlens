@@ -245,6 +245,10 @@ export async function GET(request: NextRequest) {
         totalMatches:
           typeof meta.totalElements === 'number' ? meta.totalElements : 0,
         page: typeof meta.pageNumber === 'number' ? meta.pageNumber : page,
+        totalPages:
+          typeof meta.totalPages === 'number'
+            ? Math.max(1, meta.totalPages)
+            : 1,
         hasNextPage: meta.hasNextPage === true,
         query,
         source: 'Regulations.gov API v4',

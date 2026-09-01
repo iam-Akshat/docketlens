@@ -2,6 +2,17 @@
 
 Everything shown in this demo is a live public record. Do not use seeded or fictional data.
 
+## Recorded short cut — 21.92 seconds
+
+The verified narrated cut is stored locally at
+`.demo-artifacts/output/docketlens-demo-narrated.mp4` and is intentionally ignored by Git.
+
+Narration:
+
+> DocketLens turns a federal docket with more than ten thousand public comments into an auditable research workspace. Through eight WebMCP tools, the analyst's agent searches real Regulations.gov records, inspects opposing views, compares sources, and pins exact quotations into the visible product. Every suggested excerpt remains pending until a human verifies it. The result is a source-linked brief, with transparent activity and no fictional data or automated government filing.
+
+Use the longer script below when recording a full in-app-browser Devpost walkthrough.
+
 ## 0:00–0:20 — The problem
 
 “This U.S. Copyright Office docket contains more than 10,000 public comments about AI and copyright. Researchers need to find competing positions, preserve exact evidence, and keep every claim traceable. Doing that manually means many searches, tabs, and copy-paste.”

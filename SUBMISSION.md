@@ -1,5 +1,11 @@
 # DocketLens — WebMCP Challenge submission
 
+## Submission links
+
+- Live product: [docketlens.masterakshata.chatgpt.site](https://docketlens.masterakshata.chatgpt.site)
+- Public source: [github.com/iam-Akshat/docketlens](https://github.com/iam-Akshat/docketlens)
+- Demo video: upload the verified narrated MP4 to public YouTube before submitting the form.
+
 ## One-line pitch
 
 DocketLens lets people and their agents investigate thousands of real federal public comments together, with every finding pinned to an official source and kept under human review.
@@ -14,7 +20,7 @@ Our demo uses the U.S. Copyright Office's real **Artificial Intelligence and Cop
 
 Regulatory research is a stateful, multi-step workflow. A human decides the question and judges the evidence; an agent is far faster at searching a large record, opening candidate sources, and organizing passages. WebMCP gives the agent structured access to those real product actions instead of forcing it to infer a visual interface.
 
-DocketLens exposes eight narrow tools for loading a docket, searching comments, inspecting a source, tagging records, pinning a validated excerpt, comparing submissions, reading shared workspace state, and preparing a brief. Agent actions update the same visible page the human is using. That makes collaboration legible: users can see what changed, open the government source, verify evidence, and control export.
+DocketLens exposes eight narrow tools for loading a docket, searching and paginating comments, inspecting a source, tagging records, pinning a validated excerpt, comparing submissions, reading shared workspace state, and preparing a brief. Agent actions update the same visible page the human is using. That makes collaboration legible: users can see what changed, open the government source, verify evidence, and control export.
 
 ## Better user experience
 

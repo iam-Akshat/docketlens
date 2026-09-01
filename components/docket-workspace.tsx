@@ -6,6 +6,8 @@ import {
   Bot,
   Check,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clipboard,
   FileSearch,
   FileText,
@@ -150,6 +152,13 @@ function stringList(value: unknown, key: string) {
     : [];
 }
 
+function integerInput(value: unknown, key: string, fallback = 1) {
+  const candidate = record(value)[key];
+  return typeof candidate === 'number' && Number.isFinite(candidate)
+    ? Math.trunc(candidate)
+    : fallback;
+}
+
 function formatDate(value: string | null) {
   if (!value) return 'Date unavailable';
   const date = new Date(value);
@@ -235,6 +244,9 @@ export function DocketWorkspace() {
   const [query, setQuery] = useState(DEFAULT_QUERY);
   const [queryInput, setQueryInput] = useState(DEFAULT_QUERY);
   const [totalMatches, setTotalMatches] = useState(0);
+  const [resultPage, setResultPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, CommentDetail>>({});
   const [detailLoading, setDetailLoading] = useState(false);
@@ -259,6 +271,9 @@ export function DocketWorkspace() {
   const pinsRef = useRef<EvidencePin[]>([]);
   const tagsRef = useRef<Record<string, string[]>>({});
   const queryRef = useRef(DEFAULT_QUERY);
+  const resultPageRef = useRef(1);
+  const totalPagesRef = useRef(1);
+  const hasNextPageRef = useRef(false);
   const comparisonRef = useRef<string[]>([]);
   const selectedIdRef = useRef<string | null>(null);
 
@@ -346,30 +361,42 @@ export function DocketWorkspace() {
       targetDocket: string,
       term: string,
       source: Activity['source'] = 'human',
+      page = 1,
     ) => {
       const cleanTerm = term.trim().slice(0, 180);
+      const normalizedPage = Number.isFinite(page) ? Math.trunc(page) : 1;
+      const requestedPage = Math.min(10_000, Math.max(1, normalizedPage));
       setLoadingComments(true);
       setError('');
       try {
         const payload = await getJson<{
           comments: CommentSummary[];
           totalMatches: number;
+          page: number;
+          totalPages: number;
+          hasNextPage: boolean;
         }>(
-          `/api/regulations?mode=comments&id=${encodeURIComponent(targetDocket)}&query=${encodeURIComponent(cleanTerm)}&pageSize=20`,
+          `/api/regulations?mode=comments&id=${encodeURIComponent(targetDocket)}&query=${encodeURIComponent(cleanTerm)}&page=${requestedPage}&pageSize=20`,
         );
         commentsRef.current = payload.comments;
         queryRef.current = cleanTerm;
+        resultPageRef.current = payload.page;
+        totalPagesRef.current = payload.totalPages;
+        hasNextPageRef.current = payload.hasNextPage;
         setComments(payload.comments);
         setQuery(cleanTerm);
         setQueryInput(cleanTerm);
         setTotalMatches(payload.totalMatches);
+        setResultPage(payload.page);
+        setTotalPages(payload.totalPages);
+        setHasNextPage(payload.hasNextPage);
         selectedIdRef.current = null;
         setSelectedId(null);
         addActivity(
           source,
           cleanTerm
-            ? `Searched ${payload.totalMatches.toLocaleString()} matches for “${cleanTerm}”`
-            : `Loaded ${payload.totalMatches.toLocaleString()} docket submissions`,
+            ? `Searched ${payload.totalMatches.toLocaleString()} matches for “${cleanTerm}” · page ${payload.page}`
+            : `Loaded ${payload.totalMatches.toLocaleString()} docket submissions · page ${payload.page}`,
           source === 'agent' ? 'comments' : '',
         );
         if (payload.comments[0]?.id) {
@@ -682,6 +709,14 @@ export function DocketWorkspace() {
                 'Literal keyword or phrase to search in Regulations.gov.',
               maxLength: 180,
             },
+            page: {
+              type: 'integer',
+              description:
+                'One-based result page. Use later pages to investigate beyond the first 20 matches.',
+              minimum: 1,
+              maximum: 10000,
+              default: 1,
+            },
           },
           ['query'],
         ),
@@ -691,6 +726,7 @@ export function DocketWorkspace() {
             docketRef.current?.id || DEFAULT_DOCKET,
             stringInput(input, 'query'),
             'agent',
+            integerInput(input, 'page'),
           ),
       },
       {
@@ -809,6 +845,9 @@ export function DocketWorkspace() {
         execute: () => ({
           docket: docketRef.current,
           activeQuery: queryRef.current,
+          activeResultPage: resultPageRef.current,
+          availableResultPages: totalPagesRef.current,
+          hasNextResultPage: hasNextPageRef.current,
           visibleComments: commentsRef.current.map(({ id, title }) => ({
             id,
             title,
@@ -1199,10 +1238,47 @@ export function DocketWorkspace() {
             <div>
               <h2 className="text-sm font-semibold">Public submissions</h2>
               <p className="text-xs text-muted-foreground">
-                Latest 20 real records · click to inspect
+                20 real records per page · click to inspect
               </p>
             </div>
-            <Badge variant="outline">{comments.length} shown</Badge>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Previous result page"
+                disabled={loadingComments || resultPage <= 1}
+                onClick={() =>
+                  void searchComments(
+                    docketId,
+                    query,
+                    'human',
+                    resultPage - 1,
+                  )
+                }
+              >
+                <ChevronLeft />
+              </Button>
+              <span className="min-w-16 text-center font-mono text-[10px] text-muted-foreground">
+                {resultPage}/{totalPages}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Next result page"
+                disabled={loadingComments || !hasNextPage}
+                onClick={() =>
+                  void searchComments(
+                    docketId,
+                    query,
+                    'human',
+                    resultPage + 1,
+                  )
+                }
+              >
+                <ChevronRight />
+              </Button>
+              <Badge variant="outline">{comments.length} shown</Badge>
+            </div>
           </div>
 
           {loadingComments && !comments.length ? (
