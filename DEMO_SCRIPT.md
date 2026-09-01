@@ -1,62 +1,55 @@
-# DocketLens demo script — 2 minutes 30 seconds
+# DocketLens demo script — target 2:20
 
-Everything shown in this demo is a live public record. Do not use seeded or fictional data.
+Use the live site and real Regulations.gov records only. Keep `DEMO_DATA.md` open off-camera.
 
-## Recorded short cut — 21.92 seconds
+## 0:00–0:18 — Problem
 
-The verified narrated cut is stored locally at
-`.demo-artifacts/output/docketlens-demo-narrated.mp4` and is intentionally ignored by Git.
+**Show:** The loaded `COLC-2023-0006` docket, live comment count, government-source badge, and `8 site tools ready`.
 
-Narration:
+**Say:** “A major federal docket can contain thousands of public comments. Finding competing views is slow; preserving exact, reviewable evidence is harder. DocketLens is a shared policy-research workspace for a person and their agent.”
 
-> DocketLens turns a federal docket with more than ten thousand public comments into an auditable research workspace. Through eight WebMCP tools, the analyst's agent searches real Regulations.gov records, inspects opposing views, compares sources, and pins exact quotations into the visible product. Every suggested excerpt remains pending until a human verifies it. The result is a source-linked brief, with transparent activity and no fictional data or automated government filing.
+## 0:18–0:35 — Product boundary
 
-Use the longer script below when recording a full in-app-browser Devpost walkthrough.
+**Show:** Search results, Source inspector, Evidence, Compare, and Activity tabs.
 
-## 0:00–0:20 — The problem
+**Say:** “The records come live from Regulations.gov. DocketLens is deliberately read-only: it researches public submissions but can never file or alter a government comment.”
 
-“This U.S. Copyright Office docket contains more than 10,000 public comments about AI and copyright. Researchers need to find competing positions, preserve exact evidence, and keep every claim traceable. Doing that manually means many searches, tabs, and copy-paste.”
+## 0:35–1:20 — WebMCP research
 
-Show the loaded docket title, live comment count, government-source badge, and primary notice link.
+Paste this into the agent:
 
-## 0:20–0:40 — The product
+> Use DocketLens’s site tools on the currently loaded docket. Search “fair use” and inspect comment `COLC-2023-0006-10085`. Then search “OpenAI” and inspect comment `COLC-2023-0006-10199`. Compare those two public comments. Pin one exact, complete sentence from each source that represents the commenter’s position; do not paraphrase, infer intent, or treat either commenter as speaking for OpenAI or the Authors Guild. Add concise neutral analyst notes. Stop before human verification or download.
 
-“DocketLens is a shared research workspace for a person and their agent. The center is the real Regulations.gov record. The right side is our source inspector, evidence board, comparison view, and activity log. DocketLens is read-only—it can never submit a government comment.”
+**Say while it runs:** “The agent is not guessing at buttons. The website exposes eight structured WebMCP tools. Searches, opened sources, comparisons, and evidence pins appear in the same visible state I control.”
 
-Open one visible result and briefly show its official source link.
+**Show:** The Compare view, both official comment links, two pending pins, and Agent activity.
 
-## 0:40–1:40 — The WebMCP moment
+## 1:20–1:48 — Human judgment
 
-In ChatGPT's in-app browser, say:
+**Show:** Open each pending pin, compare its exact text with the source inspector, then click **Verify** yourself.
 
-> Use DocketLens to investigate how OpenAI and the Authors Guild differ on AI training and copyright. Search the live docket, inspect relevant original comments, compare two strong sources, and pin one exact supporting excerpt from each. Do not invent or paraphrase evidence.
+**Say:** “Every agent-created quote starts pending. The app rejects a quote that is not verbatim source text, and only a person can verify it. WebMCP accelerates the evidence work without quietly taking over judgment.”
 
-As the agent works, narrate:
+## 1:48–2:08 — Auditable output
 
-“This is not browser clicking or a hidden backend MCP server. The website itself exposes eight WebMCP tools. Watch the visible page change as the agent searches the loaded docket, opens original submissions, compares sources, and pins passages. Each quote is validated against the fetched source text.”
+Paste:
 
-Show the Agent activity tab and the `WebMCP ready · 8 tools` badge.
+> Prepare the cited brief preview titled “AI copyright evidence brief” from the current verified evidence. Do not download anything.
 
-## 1:40–2:10 — Human judgment
+**Show:** The source-linked Markdown preview, then the Activity tab. Manually download only if it helps the shot.
 
-Open the Evidence tab.
+**Say:** “The result is a cited brief with exact excerpts, source IDs, review status, and a transparent activity trail.”
 
-“Agent-created evidence is deliberately marked pending. I can open the official Regulations.gov source, verify the exact wording, then approve the pin. The agent accelerates discovery; the human owns the conclusion.”
+## 2:08–2:20 — Why it matters
 
-Verify one pin and remove or leave another pending to make the distinction visible.
+**Say:** “The same workflow applies to public dockets in health, labor, transport, energy, and technology. WebMCP turns a website into a reliable collaboration surface: the agent does structured research; the analyst sees, checks, and owns the conclusion.”
 
-## 2:10–2:30 — The payoff
+End on the Evidence view with both official source links and `2/2 verified` visible.
 
-Click **Prepare cited brief**, show the source-linked Markdown, and download it.
+## Recording rules
 
-“DocketLens turns a massive public record into an auditable brief without losing provenance. The same product works across federal dockets in health, transport, labor, energy, and technology. WebMCP makes the research workflow reliable enough for people and agents to share.”
-
-End on the evidence board with the official source links visible.
-
-## Recording checklist
-
-- Keep the demo under three minutes and include voice narration.
-- Use a fresh live load so the real source badge and comment count are visible.
-- Do not claim that DocketLens gives legal advice or submits comments.
-- Zoom enough that source IDs, review status, and the WebMCP-ready badge are readable.
-- If Regulations.gov is slow, pause the recording and retry; do not replace results with fake data.
+- Run the preflight in `DEMO_DATA.md` shortly before recording.
+- Never show the Regulations.gov API key.
+- Do not call the two selected comments official OpenAI or Authors Guild submissions.
+- If either saved comment cannot be inspected with inline text, stop and use the real-data fallback in `DEMO_DATA.md`; never fabricate a result.
+- Existing rehearsal: `.demo-artifacts/output/docketlens-demo-narrated.mp4` (21.92 seconds, intentionally ignored by Git).

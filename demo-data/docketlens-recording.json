@@ -1,0 +1,25 @@
+{
+  "dataPolicy": "Live Regulations.gov records only; never substitute fictional or cached success data.",
+  "docketId": "COLC-2023-0006",
+  "docketTitle": "Artificial Intelligence and Copyright",
+  "records": [
+    {
+      "searchTerm": "fair use",
+      "commentId": "COLC-2023-0006-10085",
+      "expectedTitle": "Comment from La raza community outreach",
+      "sourceUrl": "https://www.regulations.gov/comment/COLC-2023-0006-10085"
+    },
+    {
+      "searchTerm": "OpenAI",
+      "commentId": "COLC-2023-0006-10199",
+      "expectedTitle": "Comment from Bessette, Thomas",
+      "sourceUrl": "https://www.regulations.gov/comment/COLC-2023-0006-10199"
+    }
+  ],
+  "quoteRule": "Fetch at recording time and pin one exact complete sentence from each inspected body. Never prewrite or paraphrase the quotation.",
+  "humanOnlyActions": [
+    "Verify an evidence pin",
+    "Remove an evidence pin",
+    "Download the cited brief"
+  ]
+}
