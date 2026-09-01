@@ -38,6 +38,8 @@ import { Input } from '@/components/ui/input';
 const DEFAULT_DOCKET = 'COLC-2023-0006';
 const DEFAULT_QUERY = 'OpenAI';
 const QUERY_PRESETS = ['OpenAI', 'Authors Guild', 'fair use', 'licensing'];
+const FTC_DOCKET = 'FTC-2023-0033';
+const FTC_QUERY_PRESETS = ['cancel', 'subscription', 'gym', 'free trial'];
 
 type DocketInfo = {
   id: string;
@@ -261,6 +263,7 @@ export function DocketWorkspace() {
   const [error, setError] = useState('');
   const [activity, setActivity] = useState<Activity[]>([]);
   const [agentPulse, setAgentPulse] = useState('');
+  const [shareCopied, setShareCopied] = useState(false);
   const [webMcpStatus, setWebMcpStatus] = useState<
     'checking' | 'ready' | 'unsupported'
   >('unsupported');
@@ -276,6 +279,27 @@ export function DocketWorkspace() {
   const hasNextPageRef = useRef(false);
   const comparisonRef = useRef<string[]>([]);
   const selectedIdRef = useRef<string | null>(null);
+  const initialLoadStartedRef = useRef(false);
+
+  const syncShareUrl = useCallback(
+    (
+      nextDocketId: string,
+      nextQuery: string,
+      nextPage = 1,
+      nextCommentId?: string | null,
+    ) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('docket', nextDocketId);
+      if (nextQuery) url.searchParams.set('q', nextQuery);
+      else url.searchParams.delete('q');
+      if (nextPage > 1) url.searchParams.set('page', String(nextPage));
+      else url.searchParams.delete('page');
+      if (nextCommentId) url.searchParams.set('comment', nextCommentId);
+      else url.searchParams.delete('comment');
+      window.history.replaceState(null, '', url);
+    },
+    [],
+  );
 
   useEffect(() => {
     commentsRef.current = comments;
@@ -343,6 +367,14 @@ export function DocketWorkspace() {
           `Opened source ${id}`,
           source === 'agent' ? 'source' : '',
         );
+        if (source !== 'system' && docketRef.current?.id) {
+          syncShareUrl(
+            docketRef.current.id,
+            queryRef.current,
+            resultPageRef.current,
+            id,
+          );
+        }
         return detail;
       } catch (cause) {
         setError(
@@ -353,7 +385,7 @@ export function DocketWorkspace() {
         setDetailLoading(false);
       }
     },
-    [addActivity, getCommentDetail],
+    [addActivity, getCommentDetail, syncShareUrl],
   );
 
   const searchComments = useCallback(
@@ -392,6 +424,7 @@ export function DocketWorkspace() {
         setHasNextPage(payload.hasNextPage);
         selectedIdRef.current = null;
         setSelectedId(null);
+        syncShareUrl(targetDocket, cleanTerm, payload.page);
         addActivity(
           source,
           cleanTerm
@@ -400,7 +433,17 @@ export function DocketWorkspace() {
           source === 'agent' ? 'comments' : '',
         );
         if (payload.comments[0]?.id) {
-          await inspectComment(payload.comments[0].id, 'system');
+          try {
+            await inspectComment(payload.comments[0].id, 'system');
+          } catch {
+            selectedIdRef.current = null;
+            setSelectedId(null);
+            setError('');
+            addActivity(
+              'system',
+              'Results loaded; the first source preview is temporarily unavailable',
+            );
+          }
         }
         return payload;
       } catch (cause) {
@@ -410,7 +453,7 @@ export function DocketWorkspace() {
         setLoadingComments(false);
       }
     },
-    [addActivity, inspectComment],
+    [addActivity, inspectComment, syncShareUrl],
   );
 
   const loadDocket = useCallback(
@@ -646,11 +689,45 @@ export function DocketWorkspace() {
   ]);
 
   useEffect(() => {
+    if (initialLoadStartedRef.current) return;
+    initialLoadStartedRef.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const requestedDocket = (params.get('docket') || '')
+      .trim()
+      .toUpperCase();
+    const initialDocket = /^[A-Z0-9][A-Z0-9-]{2,80}$/.test(requestedDocket)
+      ? requestedDocket
+      : DEFAULT_DOCKET;
+    const initialQuery = (params.get('q') ?? DEFAULT_QUERY)
+      .trim()
+      .slice(0, 180);
+    const requestedPage = Math.max(
+      1,
+      Number.parseInt(params.get('page') || '1', 10) || 1,
+    );
+    const requestedComment = (params.get('comment') || '')
+      .trim()
+      .toUpperCase();
+
     const timer = window.setTimeout(() => {
-      void loadDocket(DEFAULT_DOCKET, DEFAULT_QUERY, 'system');
+      void (async () => {
+        await loadDocket(initialDocket, initialQuery, 'system');
+        if (requestedPage > 1) {
+          await searchComments(
+            initialDocket,
+            initialQuery,
+            'system',
+            requestedPage,
+          );
+        }
+        if (/^[A-Z0-9][A-Z0-9-]{2,80}$/.test(requestedComment)) {
+          await inspectComment(requestedComment, 'human');
+        }
+      })().catch(() => undefined);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [loadDocket]);
+  }, [inspectComment, loadDocket, searchComments]);
 
   useEffect(() => {
     const context = document.modelContext;
@@ -1000,6 +1077,21 @@ export function DocketWorkspace() {
     addActivity('human', 'Downloaded source-linked evidence brief');
   };
 
+  const copyShareLink = async () => {
+    syncShareUrl(docketId, query, resultPage, selectedId);
+    await navigator.clipboard.writeText(window.location.href);
+    setShareCopied(true);
+    window.setTimeout(() => setShareCopied(false), 1800);
+    addActivity('human', 'Copied shareable docket link');
+  };
+
+  const queryPresets =
+    docketId === FTC_DOCKET
+      ? FTC_QUERY_PRESETS
+      : docketId === DEFAULT_DOCKET
+        ? QUERY_PRESETS
+        : [];
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-card/95 px-4 py-3 backdrop-blur sm:px-6">
@@ -1107,6 +1199,15 @@ export function DocketWorkspace() {
                 Primary notice <ArrowUpRight className="size-3" />
               </a>
             ) : null}
+            <Button
+              variant="outline"
+              size="xs"
+              onClick={() => void copyShareLink()}
+              disabled={!docket}
+              aria-label="Copy shareable docket link"
+            >
+              <Clipboard /> {shareCopied ? 'Link copied' : 'Copy link'}
+            </Button>
           </div>
         </div>
       </section>
@@ -1168,18 +1269,22 @@ export function DocketWorkspace() {
             </div>
           </form>
 
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {QUERY_PRESETS.map((preset) => (
-              <Button
-                key={preset}
-                variant={query === preset ? 'secondary' : 'outline'}
-                size="xs"
-                onClick={() => void searchComments(docketId, preset, 'human')}
-              >
-                {preset}
-              </Button>
-            ))}
-          </div>
+          {queryPresets.length ? (
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {queryPresets.map((preset) => (
+                <Button
+                  key={preset}
+                  variant={query === preset ? 'secondary' : 'outline'}
+                  size="xs"
+                  onClick={() =>
+                    void searchComments(docketId, preset, 'human')
+                  }
+                >
+                  {preset}
+                </Button>
+              ))}
+            </div>
+          ) : null}
 
           <div className="mt-6 rounded-xl border border-border bg-card p-3 shadow-sm">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">

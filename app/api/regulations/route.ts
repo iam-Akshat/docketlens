@@ -39,19 +39,28 @@ async function regulationsFetch(path: string, params?: URLSearchParams) {
   const url = new URL(`${API_ROOT}${path}`);
   params?.forEach((value, key) => url.searchParams.set(key, value));
 
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      'X-Api-Key': upstreamKey(),
-    },
-    next: { revalidate: 300 },
-  });
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'X-Api-Key': upstreamKey(),
+      },
+      next: { revalidate: 300 },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Regulations.gov returned ${response.status}`);
+    if (response.ok) {
+      return response.json() as Promise<unknown>;
+    }
+
+    const retryable = response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === 1) {
+      throw new Error(`Regulations.gov returned ${response.status}`);
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 250));
   }
 
-  return response.json() as Promise<unknown>;
+  throw new Error('Regulations.gov did not return a response');
 }
 
 function safeDocket(raw: unknown) {

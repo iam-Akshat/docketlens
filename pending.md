@@ -32,6 +32,8 @@ Do not submit until every **P0** item is complete.
 
 ## Already complete
 
+- [x] Shareable URLs restore the docket, query, result page, and selected source.
+- [x] Verified a second real-data workflow using FTC-2023-0033 and inline consumer comments.
 - [x] Eight imperative WebMCP tools share visible state with the human UI.
 - [x] Real Regulations.gov data with no fictional demo records.
 - [x] Exact-source quote validation and pending-human-review evidence state.

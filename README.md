@@ -6,6 +6,8 @@ DocketLens is a WebMCP-native research workspace for large U.S. federal regulato
 
 The default experience uses the real U.S. Copyright Office docket **COLC-2023-0006 — Artificial Intelligence and Copyright**, with more than 10,000 public comments. No demo records are fabricated.
 
+A strong second example is **FTC-2023-0033 — FTC Seek Comments on the Negative Option Rule**. It contains 1,163 public comments about subscriptions, cancellation, free trials, and related consumer experiences.
+
 ![DocketLens social preview](public/og.png)
 
 ## Why this is useful
@@ -36,6 +38,14 @@ Without WebMCP, an agent must visually guess where search boxes, result cards, t
 | `prepare_evidence_brief` | Assemble a cited Markdown brief for human review |
 
 The implementation uses the imperative WebMCP API, `document.modelContext.registerTool(...)`, supported by ChatGPT's in-app browser. Tool inputs use strict schemas, public source content is marked untrusted, and source excerpts are checked against the fetched record before they can be pinned.
+
+## Shareable research links
+
+DocketLens keeps the active docket, search query, result page, and manually opened source in the URL. Use **Copy link** to share the current research context. Recipients load that docket instead of the default.
+
+Example:
+
+<https://docketlens.masterakshata.chatgpt.site/?docket=FTC-2023-0033&q=cancel>
 
 ## Architecture
 
