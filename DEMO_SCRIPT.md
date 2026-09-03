@@ -5,9 +5,10 @@ Record ChatGPT and the in-app browser together. Keep the agent conversation visi
 ## Before recording
 
 1. Open `https://docketlens.masterakshata.chatgpt.site/?docket=FTC-2023-0033&q=cancel` in ChatGPT’s in-app browser.
-2. Confirm the page shows **Regulations.gov live**, **8 site tools ready**, 1,163 comments, and search results.
+2. Confirm the page shows **Regulations.gov live**, **8 site tools ready**, a live comment count, and search results. Counts may change.
 3. Start a fresh ChatGPT conversation so the agent workflow is easy to follow.
-4. Keep this file off-camera for narration and prompts.
+4. Keep this file and `DEMO_DATA.md` off-camera. Use the known comment IDs and quotes in `DEMO_DATA.md` to check that live records load, not as answers to paste into ChatGPT.
+5. Begin the recorded run with no evidence pins or prepared brief from rehearsal. The docket and search above are the starting context; the agent chooses which comments to inspect.
 
 ## 0:00–0:18 — Problem and product
 
@@ -27,21 +28,31 @@ Record ChatGPT and the in-app browser together. Keep the agent conversation visi
 
 ## 0:32–1:25 — Agent research workflow
 
-Paste this exact prompt into ChatGPT:
+Paste this into ChatGPT:
 
-> Use DocketLens’s site tools only. On docket `FTC-2023-0033`, search `cancel` on page 1 and then page 2. Inspect comments `FTC-2023-0033-1056` and `FTC-2023-0033-1136`, then compare them. Pin these exact excerpts with neutral notes: from `FTC-2023-0033-1056`, “If you signed up online, you should be able to cancel online.” From `FTC-2023-0033-1136`, “Service contracts are not the same as gym memberships, and don't have the same issues that the FTC indicated as the reason to create the rule.” Prepare a brief preview titled “FTC click-to-cancel evidence brief.” Stop before verification, copying, or downloading.
+> I'm researching the FTC's click-to-cancel rule. Use DocketLens to find a couple of contrasting public comments, show me the original sources, and prepare a short evidence brief for me to review.
+
+Let the agent choose search terms, pages, comments, and excerpts. Different runs may find different records. Do not feed it the preflight IDs or quotes, or require a particular tool order.
 
 **While the agent runs, say:**
 
-> “The agent searches the live docket, moves beyond the first result page, opens two specific public comments, and compares their original text. One commenter supports easier online cancellation; the other asks the FTC to distinguish small-business service contracts. The app keeps both official record links visible and generates no verdict.”
+> “I've asked a research question. The agent chooses which comments to open and which passages support the comparison. I can follow its work in the same workspace and check the original sources.”
+
+Describe the contrast only after reading the comments it actually finds. Two comments are examples, not a measure of overall public opinion.
 
 **Make sure the recording visibly captures:**
 
 - the agent invoking site tools;
-- the result indicator changing to page 2;
-- both comment IDs in Compare;
-- two exact evidence pins marked **Pending human review**;
+- live search results and the source text the agent inspects;
+- the selected comments and their official source links, including Compare if the agent uses it;
+- exact evidence pins marked **Pending human review**;
 - the warning that Copy and Download are unavailable while evidence is pending.
+
+If it answers only in chat without preparing the workspace, use this short follow-up on camera:
+
+> Save the supporting quotes in DocketLens and put the brief there so I can review it.
+
+Keep any follow-up visible. Do not describe a step as completed unless the app shows it.
 
 ## 1:25–1:52 — Human verification
 
@@ -53,7 +64,7 @@ Paste this exact prompt into ChatGPT:
 
 ## 1:52–2:08 — Auditable result
 
-**Show:** `2/2 verified`, the brief preview, enabled export buttons, both official links, then the Activity tab.
+**Show:** All pins verified (for example, `2/2 verified` if there are two), the brief preview, enabled export buttons, official links, then the Activity tab.
 
 **Say:**
 
@@ -61,7 +72,7 @@ Paste this exact prompt into ChatGPT:
 
 ## 2:08–2:15 — Closing
 
-**End on:** Evidence or Activity with `2/2 verified` and `8 site tools ready` visible.
+**End on:** Evidence or Activity with all pins verified and `8 site tools ready` visible.
 
 **Say:**
 
@@ -70,6 +81,7 @@ Paste this exact prompt into ChatGPT:
 ## If something fails
 
 - If a record does not load, stop recording; do not improvise fictional data.
-- Re-run the preflight in `DEMO_DATA.md` and replace the IDs only with newly verified live comments.
+- Re-run the preflight in `DEMO_DATA.md` off-camera, then retry with the natural prompt. Keep specific IDs and quotes out of the recorded request.
+- If the agent cannot find a meaningful contrast, show that limitation or ask it to keep looking. Do not narrate a predetermined result.
 - If the agent is slow, pause the recording between completed tool calls rather than hiding the agent interaction.
 - Keep the final video under three minutes.
