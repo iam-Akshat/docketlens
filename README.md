@@ -24,7 +24,19 @@ DocketLens keeps the speed of an agent and the accountability of source-based re
 
 ## Why WebMCP matters
 
-Without WebMCP, an agent must visually guess where search boxes, result cards, tabs, and citation controls are. It may lose the page's current state or copy the wrong passage. DocketLens exposes the product's real research actions as narrow structured tools. The agent and person operate the same live workspace, so actions are immediately visible, reversible, and reviewable.
+Public-comment research needs a handoff between finding evidence and deciding whether it supports a claim. An agent can help search a large docket, but the researcher still needs to read the original passages, remove weak evidence, and approve what enters the brief. A finished answer in chat does not give them that working relationship.
+
+WebMCP connects the agent to the research workspace the person is already using. Regulations.gov supplies the public records; DocketLens's WebMCP tools supply the current research context and the actions that change it. The agent can read the active docket, selected source, comparison, tags, and evidence-review status, then put its findings directly into the visible evidence board.
+
+The collaboration works in both directions:
+
+1. The person opens a docket and asks a research question. The agent reads that workspace, searches comments, and pins source-checked excerpts for review.
+2. The person reads the linked originals and verifies or removes pins in the page. Those decisions change the same state the agent's tools read.
+3. The agent reads the updated board and prepares the brief from the remaining evidence. The person controls export; pending evidence blocks copying and downloading.
+
+There is no need to paste comment IDs, quotes, or review decisions back into chat to keep the agent's working copy aligned. The evidence board is the shared record of the work. Collaboration here means a person and their agent in the same browser workspace, not a multi-user document service.
+
+This could also be built with a custom agent integration or browser automation. WebMCP provides a standard interface for exposing these page-level research actions to a compatible agent. A direct Regulations.gov API connection alone would retrieve records, but would not tell the agent which evidence the person has kept or reviewed in DocketLens. The quote checks, review states, and export restrictions are DocketLens's application rules, not guarantees supplied by WebMCP itself.
 
 | WebMCP tool | Product action |
 | --- | --- |

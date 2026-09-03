@@ -1,4 +1,4 @@
-# DocketLens manual demo script — 2:15 target
+# DocketLens manual demo script — 2:45 target
 
 Record ChatGPT and the in-app browser together. Keep the agent conversation visible whenever a WebMCP tool runs. Do not show terminals, source code, API keys, or invented records.
 
@@ -16,17 +16,17 @@ Record ChatGPT and the in-app browser together. Keep the agent conversation visi
 
 **Say:**
 
-> “A federal rulemaking can receive thousands of public comments. DocketLens is a shared research workspace where a person and an agent can investigate those records without losing the original evidence.”
+> “A federal rulemaking can receive thousands of public comments. An agent can help find relevant passages, but I still need to check whether they support the brief. DocketLens gives us one workspace for that research and review.”
 
-## 0:18–0:32 — Why WebMCP
+## 0:18–0:43 — Why WebMCP fits this work
 
 **Show:** The `8 site tools ready` badge and the Search, Source, Compare, Evidence, and Activity areas.
 
 **Say:**
 
-> “Instead of guessing how to click through the website, ChatGPT gets eight structured WebMCP tools. Every agent action updates the same visible workspace that I can inspect and control.”
+> “Regulations.gov supplies the records. WebMCP connects the agent to my research workspace: it can read what I'm looking at and put source-linked quotes on this board. I review them here, then the agent can read my decisions and continue. We don't have to copy evidence and review decisions between chat and the app.”
 
-## 0:32–1:25 — Agent research workflow
+## 0:43–1:30 — Agent research workflow
 
 Paste this into ChatGPT:
 
@@ -36,7 +36,7 @@ Let the agent choose search terms, pages, comments, and excerpts. Different runs
 
 **While the agent runs, say:**
 
-> “I've asked a research question. The agent chooses which comments to open and which passages support the comparison. I can follow its work in the same workspace and check the original sources.”
+> “The agent's findings appear here as evidence I can inspect, not just an answer in chat. Each pin keeps the original source attached and waits for my review.”
 
 Describe the contrast only after reading the comments it actually finds. Two comments are examples, not a measure of overall public opinion.
 
@@ -54,29 +54,43 @@ If it answers only in chat without preparing the workspace, use this short follo
 
 Keep any follow-up visible. Do not describe a step as completed unless the app shows it.
 
-## 1:25–1:52 — Human verification
+## 1:30–1:57 — Human verification
 
-**Do manually:** Open each pending pin, compare it with the source text, and click **Verify**. Do not ask the agent to verify.
+**Do manually:** Open each pending pin and compare it with the source text. Click **Verify** only if the excerpt and note support the intended use; remove weak or irrelevant evidence. Do not ask the agent to verify. Leave at least one genuinely useful verified pin for the brief, or continue researching if none qualifies.
 
 **Say:**
 
-> “The agent can find and organize evidence, but it cannot approve its own work. A quote is accepted only when it exactly matches the fetched comment, and export remains locked until I verify every agent-created pin.”
+> “DocketLens checks that the quote matches the fetched source. I check its context and whether the note is fair. I can verify it or remove it. These decisions update the same board the agent reads, and the app blocks export while any evidence is pending.”
 
-## 1:52–2:08 — Auditable result
+## 1:57–2:25 — Hand the reviewed workspace back to the agent
+
+After reviewing the pins, paste:
+
+> I've finished reviewing the evidence in DocketLens. Check the board and refresh the brief using what's there now.
+
+**Show:** The agent reading workspace state and preparing a fresh brief. The updated review statuses should be reflected in the brief. If you removed a pin, confirm it is absent. Do not paste the decisions or comment IDs into chat.
+
+**Say:**
+
+> “This is the handoff back. Through WebMCP, the agent can read which evidence I kept and verified, then rebuild the brief from that board. I don't have to describe every click or send the evidence back to it.”
+
+If the agent does not read the workspace, do not claim it did. Ask it on camera to check the current evidence board before refreshing the brief.
+
+## 2:25–2:37 — Auditable result
 
 **Show:** All pins verified (for example, `2/2 verified` if there are two), the brief preview, enabled export buttons, official links, then the Activity tab.
 
 **Say:**
 
-> “After verification, the brief contains exact excerpts, neutral notes, review status, comment IDs, and official source links. The activity trail distinguishes agent actions, human decisions, and system events.”
+> “The brief keeps the quotes, notes, review status, and official links. The activity trail shows the agent's research and my review. I control the download.”
 
-## 2:08–2:15 — Closing
+## 2:37–2:45 — Closing
 
 **End on:** Evidence or Activity with all pins verified and `8 site tools ready` visible.
 
 **Say:**
 
-> “DocketLens never files a government comment. WebMCP accelerates the research, while the human can see, verify, and audit every step.”
+> “WebMCP lets the agent work in the evidence board I review. We build the brief together. DocketLens never files a government comment.”
 
 ## If something fails
 

@@ -6,7 +6,9 @@ DocketLens is a shared research workspace, not a chat answer. The agent changes 
 
 ## 2. Why does this need WebMCP?
 
-Without WebMCP, an agent must infer controls and page state from pixels. Eight narrow tools expose the product's real actions and return small structured results. This makes multi-step research faster and makes every agent action visible, reviewable, and reversible in the human interface.
+The agent needs access to the analyst's ongoing research, not just the public records. WebMCP connects it to the current docket, selected sources, evidence board, and review states. It can stage quotes in the page; the human can verify or remove them; then the agent can read those decisions and rebuild the brief. That two-way handoff is the product's use of WebMCP.
+
+A direct Regulations.gov API connection alone cannot see what the analyst has reviewed in DocketLens. A custom integration or browser automation could support the same collaboration, so WebMCP is not the only possible implementation. It provides a standard interface for the site's research actions, while DocketLens enforces exact-source checks and human-review restrictions.
 
 ## 3. What prevents fabricated or misplaced evidence?
 
