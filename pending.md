@@ -28,7 +28,6 @@ The product work is complete. Do not submit until the three **manual blockers** 
 - [x] Agent and API pagination enforce Regulations.gov's 5,000-record query window with a specific error.
 - [x] Application lint, automated tests, and production build pass.
 - [x] Keyboard focus, mobile layout, loading, empty, and upstream-error states were checked.
-- [x] Five concise adversarial judge answers are prepared in `JUDGE_QA.md`.
 
 ## Deferred infrastructure enhancement
 
